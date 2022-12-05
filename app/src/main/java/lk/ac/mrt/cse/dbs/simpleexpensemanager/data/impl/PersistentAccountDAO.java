@@ -12,11 +12,11 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.exception.InvalidAccountExcep
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 
-public class PersistentMemoryAccountDAO implements AccountDAO {
+public class PersistentAccountDAO implements AccountDAO {
 
     private final SQLiteHelper sqLiteHelper;
 
-    public PersistentMemoryAccountDAO(SQLiteHelper sqLiteHelper) {
+    public PersistentAccountDAO(SQLiteHelper sqLiteHelper) {
         this.sqLiteHelper = sqLiteHelper;
     }
 
@@ -29,9 +29,12 @@ public class PersistentMemoryAccountDAO implements AccountDAO {
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 
-        while (cursor.moveToFirst()) {
-            String accountNo = cursor.getString(cursor.getColumnIndex(SQLiteHelper.ACCOUNT_NO_COL));
-            accountNumbers.add(accountNo);
+        if (cursor.moveToFirst()) {
+            do {
+                String accountNo = cursor.getString(cursor.getColumnIndex(SQLiteHelper.ACCOUNT_NO_COL));
+                System.out.println(accountNo);
+                accountNumbers.add(accountNo);
+            } while (cursor.moveToNext());
         }
 
         cursor.close();
@@ -48,13 +51,15 @@ public class PersistentMemoryAccountDAO implements AccountDAO {
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 
-        while (cursor.moveToFirst()) {
-            String accountNo = cursor.getString(cursor.getColumnIndex(SQLiteHelper.ACCOUNT_NO_COL));
-            String bankName = cursor.getString(cursor.getColumnIndex(SQLiteHelper.BANK_NAME_COL));
-            String accountHolderName = cursor.getString(cursor.getColumnIndex(SQLiteHelper.HOLDER_NAME_COL));
-            double balance = cursor.getDouble(cursor.getColumnIndex(SQLiteHelper.BALANCE_COL));
+        if (cursor.moveToFirst()) {
+            do {
+                String accountNo = cursor.getString(cursor.getColumnIndex(SQLiteHelper.ACCOUNT_NO_COL));
+                String bankName = cursor.getString(cursor.getColumnIndex(SQLiteHelper.BANK_NAME_COL));
+                String accountHolderName = cursor.getString(cursor.getColumnIndex(SQLiteHelper.HOLDER_NAME_COL));
+                double balance = cursor.getDouble(cursor.getColumnIndex(SQLiteHelper.BALANCE_COL));
 
-            accounts.add(new Account(accountNo, bankName, accountHolderName, balance));
+                accounts.add(new Account(accountNo, bankName, accountHolderName, balance));
+            } while (cursor.moveToNext());
         }
 
         cursor.close();
@@ -122,7 +127,7 @@ public class PersistentMemoryAccountDAO implements AccountDAO {
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
         String[] parameters = {accountNo};
         SQLiteDatabase sqLiteDatabase = sqLiteHelper.getReadableDatabase();
-        String query = "SELECT " + SQLiteHelper.BALANCE_COL + " FROM " + SQLiteHelper.ACCOUNT_TABLE + " WHERE accountNo = ?";
+        String query = "SELECT " + SQLiteHelper.BALANCE_COL + " FROM " + SQLiteHelper.ACCOUNT_TABLE + " WHERE " + SQLiteHelper.ACCOUNT_NO_COL + "= ?";
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, parameters);
 

@@ -23,7 +23,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 
     public SQLiteHelper(@Nullable Context context) {
-        super(context, "expenseManager.db", null, 1);
+        super(context, "200555H.db", null, 1);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         // Creating transaction Table
         String createTransactionTableStatement = "CREATE TABLE " + TRANSACTION_TABLE + "(" +
                 TRANSACTION_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                DATE_COL + " DATE NOT NULL, " +
+                DATE_COL + " INTEGER NOT NULL, " +
                 ACCOUNT_NO_COL + " TEXT NOT NULL, " +
                 EXPENSE_TYPE + " TEXT NOT NULL, " +
                 AMOUNT_COL + " REAL NOT NULL, " +
