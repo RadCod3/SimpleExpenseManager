@@ -18,6 +18,7 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 public class PersistentTransactionDAO implements TransactionDAO {
 
     private final SQLiteHelper sqLiteHelper;
+    // Dates are stored in our db using Date.toString() hence we need this SimpleDateFormat to parse that
     private final SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", new Locale("us"));
 
     public PersistentTransactionDAO(SQLiteHelper sqLiteHelper) {
@@ -27,7 +28,6 @@ public class PersistentTransactionDAO implements TransactionDAO {
     @Override
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
         SQLiteDatabase sqLiteDatabase = sqLiteHelper.getWritableDatabase();
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLiteHelper.DATE_COL, date.toString());
         contentValues.put(SQLiteHelper.ACCOUNT_NO_COL, accountNo);
@@ -46,6 +46,7 @@ public class PersistentTransactionDAO implements TransactionDAO {
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 
+        // If cursor query returns data iterate through the values and extract data
         if (cursor.moveToFirst()) {
             do {
                 String accountNo = cursor.getString(cursor.getColumnIndex(SQLiteHelper.ACCOUNT_NO_COL));

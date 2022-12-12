@@ -28,6 +28,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        System.out.println("Creating Tables");
         // Creating account Table
         String createAccountTableStatement =
                 "CREATE TABLE " + ACCOUNT_TABLE + "(" +
@@ -39,7 +40,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         // Creating transaction Table
         String createTransactionTableStatement = "CREATE TABLE " + TRANSACTION_TABLE + "(" +
                 TRANSACTION_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                DATE_COL + " INTEGER NOT NULL, " +
+                DATE_COL + " TEXT NOT NULL, " +
                 ACCOUNT_NO_COL + " TEXT NOT NULL, " +
                 EXPENSE_TYPE + " TEXT NOT NULL, " +
                 AMOUNT_COL + " REAL NOT NULL, " +

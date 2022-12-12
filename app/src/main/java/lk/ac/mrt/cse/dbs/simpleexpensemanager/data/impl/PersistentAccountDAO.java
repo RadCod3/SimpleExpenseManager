@@ -32,7 +32,6 @@ public class PersistentAccountDAO implements AccountDAO {
         if (cursor.moveToFirst()) {
             do {
                 String accountNo = cursor.getString(cursor.getColumnIndex(SQLiteHelper.ACCOUNT_NO_COL));
-                System.out.println(accountNo);
                 accountNumbers.add(accountNo);
             } while (cursor.moveToNext());
         }
@@ -72,6 +71,7 @@ public class PersistentAccountDAO implements AccountDAO {
     public Account getAccount(String accountNo) throws InvalidAccountException {
         String[] parameters = {accountNo};
         SQLiteDatabase sqLiteDatabase = sqLiteHelper.getReadableDatabase();
+        // prepared statement to avoid sql injection
         String query = "SELECT * FROM " + SQLiteHelper.ACCOUNT_TABLE + " WHERE accountNo = ?";
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, parameters);
